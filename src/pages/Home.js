@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
@@ -29,11 +30,26 @@ const Home = () => {
 
   useEffect(() => {
     const lowerSearch = search.toLowerCase();
-    const filtered = songs.filter((song) =>
-      (song.title?.toLowerCase() || "").includes(lowerSearch) ||
-      (song.artist?.toLowerCase() || "").includes(lowerSearch)
-    );
-    setFilteredSongs(filtered);
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const scored = songs.map((song) => {
+      const timestamps = song.favoritedAt || [];
+      const countLast7Days = timestamps.filter((ts) => {
+        const date = ts.toDate ? ts.toDate() : new Date(ts);
+        return date >= sevenDaysAgo;
+      }).length;
+      return { ...song, recentFavorites: countLast7Days };
+    });
+
+    const sorted = scored
+      .filter((song) =>
+        (song.title?.toLowerCase() || "").includes(lowerSearch) ||
+        (song.artist?.toLowerCase() || "").includes(lowerSearch)
+      )
+      .sort((a, b) => b.recentFavorites - a.recentFavorites);
+
+    setFilteredSongs(sorted);
   }, [songs, search]);
 
   return (

@@ -67,7 +67,7 @@ export default function SongCard({ song }) {
             height="120"
             allow="autoplay"
             className="rounded"
-            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(song.soundcloudUrl)}&color=%23ff5500&inverse=false&auto_play=false&show_user=true`}
+            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(song.soundcloudUrl)}&auto_play=false&show_user=false&hide_related=true&show_comments=false&visual=false`}
           ></iframe>
         ) : (
           <div className="w-full h-28 flex items-center justify-center bg-gray-700 rounded">
