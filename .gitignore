@@ -1,35 +1,24 @@
-# Node.js
+# dependencies
 node_modules/
-.env
-.env.local
-.env.development
-.env.production
 
-# Build output
-build/
+# build output
 dist/
+build/
+
+# misc
+.DS_Store
+.env
+*.log
+firebase-debug.log
 
 # Firebase
-firebase-debug.log
-firebase.json
-firestore.indexes.json
-firestore.rules
-
-# OS + IDE cruft
-.DS_Store
-.vscode/
-*.log
-
-# MacOS & system files
-*.swp
-Thumbs.db
-
-# Google Cloud SDK (to prevent giant files from getting committed again)
 google-cloud-sdk/
+serviceAccountKey.json
 
-# Optional Vercel/Netlify local build settings
-.vercel/
-.netlify/
+# local git repo backups
+*.orig
+*.bak
 
-# Cache
-.cache/
+# IDEs
+.vscode/
+.idea/

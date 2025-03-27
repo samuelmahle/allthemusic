@@ -1,75 +1,78 @@
-import React, { useRef, useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
-function Signup() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const navigate = useNavigate();
-  const [error, setError] = useState('');
+const Signup = ({ setMode }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError('❌ Passwords do not match.');
+    if (!email || !password || !confirmPassword) {
+      return setError("Please fill in all fields.");
+    }
+
+    if (password.length < 6) {
+      return setError("Password must be at least 6 characters.");
+    }
+
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match.");
     }
 
     try {
-      setError('');
-      await createUserWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value);
-      navigate('/');
-    } catch (error) {
-      console.error('Signup error:', error.code, error.message);
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          setError('❌ This email is already in use.');
-          break;
-        case 'auth/invalid-email':
-          setError('❌ Please enter a valid email.');
-          break;
-        case 'auth/weak-password':
-          setError('❌ Password must be at least 6 characters.');
-          break;
-        default:
-          setError('❌ Failed to create an account.');
-      }
+      await createUserWithEmailAndPassword(auth, email, password);
+      setSuccess("Account created! Redirecting to login...");
+      setTimeout(() => {
+        setMode("login");
+      }, 1500);
+    } catch (err) {
+      setError("Failed to sign up: " + err.message);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white px-4">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-4 text-center">📝 Sign Up</h2>
-        {error && <p className="text-red-400 mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm mb-1">Email</label>
-            <input type="email" ref={emailRef} className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white" required />
-          </div>
-          <div>
-            <label className="block text-sm mb-1">Password</label>
-            <input type="password" ref={passwordRef} className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white" required />
-          </div>
-          <div>
-            <label className="block text-sm mb-1">Confirm Password</label>
-            <input type="password" ref={passwordConfirmRef} className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white" required />
-          </div>
-          <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded font-semibold">
-            ✅ Create Account
-          </button>
-        </form>
-        <p className="mt-4 text-center text-sm text-gray-300">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-400 hover:underline">
-            Log In
-          </Link>
-        </p>
-      </div>
+    <div>
+      <h2 className="text-xl font-bold text-center mb-4">✨ Sign Up</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="px-4 py-2 rounded bg-gray-700 text-white"
+        />
+        <input
+          type="password"
+          placeholder="Password (min 6 chars)"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="px-4 py-2 rounded bg-gray-700 text-white"
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="px-4 py-2 rounded bg-gray-700 text-white"
+        />
+        {error && <div className="text-red-400 text-sm">{error}</div>}
+        {success && <div className="text-green-400 text-sm">{success}</div>}
+        <button
+          type="submit"
+          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white font-semibold"
+        >
+          ✨ Sign Up
+        </button>
+      </form>
     </div>
   );
-}
+};
 
 export default Signup;

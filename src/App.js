@@ -1,29 +1,27 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import Home from './pages/Home';
-import Favorites from './pages/Favorites';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Upload from './pages/Upload';
-import Navbar from './components/Navbar';
-import EditSong from './pages/EditSong';
+
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Upload from "./pages/Upload";
+import Favorites from "./pages/Favorites";
+import EditSong from "./pages/EditSong";
+import Navbar from "./components/Navbar";
+import { AuthProvider } from "./contexts/AuthContext";
+import AuthGate from "./components/AuthGate";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
-        <div className="container mx-auto p-4">
+        <AuthGate>
+          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/favorites" element={<Favorites />} />
             <Route path="/edit/:id" element={<EditSong />} />
           </Routes>
-        </div>
+        </AuthGate>
       </Router>
     </AuthProvider>
   );
