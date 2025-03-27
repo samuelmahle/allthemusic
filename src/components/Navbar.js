@@ -1,46 +1,23 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
-function Navbar() {
+const Navbar = () => {
   const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (err) {
-      console.error('Logout failed:', err);
-    }
-  };
 
   return (
-    <nav className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center shadow">
-      <div className="flex gap-4 items-center">
-        <Link to="/" className="font-bold text-xl text-white hover:text-pink-400">🎵 Unreleased</Link>
-        <Link to="/" className="hover:text-pink-300">Home</Link>
+    <nav className="bg-black text-white px-4 py-3 flex flex-wrap justify-between items-center">
+      <div className="text-xl font-bold">🎵 Unreleased Music</div>
+      <div className="flex space-x-4 mt-2 sm:mt-0">
+        <Link to="/">Home</Link>
+        <Link to="/upload">Upload</Link>
+        <Link to="/favorites">Favorites</Link>
         {currentUser && (
-          <>
-            <Link to="/upload" className="hover:text-pink-300">Upload</Link>
-            <Link to="/favorites" className="hover:text-pink-300">Favorites</Link>
-          </>
-        )}
-      </div>
-      <div className="flex items-center gap-4">
-        {currentUser ? (
-          <button onClick={handleLogout} className="text-sm bg-pink-600 px-3 py-1 rounded hover:bg-pink-700">
-            🚪 Logout
-          </button>
-        ) : (
-          <>
-            <Link to="/login" className="hover:text-pink-300">Login</Link>
-            <Link to="/signup" className="hover:text-pink-300">Sign Up</Link>
-          </>
+          <button onClick={logout} className="text-red-400 hover:underline">Logout</button>
         )}
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

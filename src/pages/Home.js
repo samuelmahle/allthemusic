@@ -10,6 +10,7 @@ const Home = () => {
   const [filteredSongs, setFilteredSongs] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showSearch, setShowSearch] = useState(true);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -37,23 +38,33 @@ const Home = () => {
 
   return (
     <div className="p-4">
-      <input
-        type="text"
-        placeholder="Search by song or artist"
-        className="mb-4 w-full px-4 py-2 rounded bg-gray-800 text-white"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <h2 className="text-xl font-bold text-white mb-4">🔥 Trending Songs</h2>
-      {loading ? (
-        <p className="text-white text-center mt-10">Loading songs...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredSongs.map((song) => (
-            <SongCard key={song.id} song={song} />
-          ))}
-        </div>
+      <button
+        onClick={() => setShowSearch(!showSearch)}
+        className="sm:hidden bg-gray-700 text-white px-4 py-2 rounded mb-4"
+      >
+        Toggle Search
+      </button>
+      {showSearch && (
+        <input
+          type="text"
+          placeholder="Search by song or artist"
+          className="mb-4 w-full px-4 py-2 rounded bg-gray-800 text-white"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       )}
+      <>
+        <h2 className="text-xl font-bold text-white mb-4">🔥 Trending Songs</h2>
+        {loading ? (
+          <p className="text-white text-center mt-10">Loading songs...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {filteredSongs.map((song) => (
+              <SongCard key={song.id} song={song} />
+            ))}
+          </div>
+        )}
+      </>
     </div>
   );
 };
